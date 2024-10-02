@@ -31,7 +31,7 @@ def infox(*args):
 
 
 class NexisWebScrapper:
-    def __init__(self, valueToStart=1, N=0, query_word = "Hate Crime"):
+    def __init__(self, valueToStart=1, N=0, BATCH_SIZE=250, query_word = "Hate Crime"):
         # maybe add btime, etime to dynamic the query
 
         # TODO: add beg time, end time, and also make link dynamic
@@ -54,7 +54,7 @@ class NexisWebScrapper:
         
         self.N = N  # final number of articles
         self.valueToStart = valueToStart    # Starting point for range
-        self.batchSize = 10    # MAXIMUM Value = 500 (Due to lexis nexis restrictions)
+        self.batchSize = BATCH_SIZE    # MAXIMUM Value = 500 (Due to lexis nexis restrictions)
                                 # Minimum Value = 2, (Due to how i coded i lol)
                                 # Recommended = 250, sometimes at 500, lexis uni decides to email you
                                 # the results, but you are not even logged in, so that is just
@@ -130,8 +130,15 @@ class NexisWebScrapper:
     def changeInputValue(self, valueToStart=1):
         inputText = self.helper_find_element("//input[@id='SelectedRange' and @placeholder]")
         inputText.clear()
-        inputText.send_keys(str(valueToStart) + "-" + str(valueToStart+self.batchSize-1))
-        infox("Changed input value to", str(valueToStart) + "-" + str(valueToStart+self.batchSize-1))
+        
+        if (self.N - valueToStart + 1) < self.batchSize:    # if less than batch size
+            range_text = str(valueToStart) + "-" + str(self.N)  # go till last element
+        else:
+            range_text = str(valueToStart) + "-" + str(valueToStart+self.batchSize-1)  # go till batchSize
+        
+        inputText.send_keys(range_text)
+        
+        infox("Changed input value to", range_text)
 
     
     def selectWordFormat(self):
@@ -206,39 +213,28 @@ class NexisWebScrapper:
         self.driver.close()
 
 
-    def __call__(self):
+    def getN(self):
         self.login()
         self.driver.get(self.link)
 
         self.toggleHighSimilarity()
-        time.sleep(1)
 
-        self.clickDownloadIcon()
-        time.sleep(1)
-
-        # TODO Implement logic to partition self.N into batch sizes (use loop or multithreading?)
-        # Problem: we need self.n after selecting high simi to know how to partition
-        # It won't allow us to download repeatedly, we need new incognito session each time
-        # So maybe need a parent script that finds self.n, then run child scripts to open
-        # the new url directly and download in given batch range
-        self.changeInputValue(1)
-        time.sleep(1)
-        
-        self.selectWordFormat()
-        time.sleep(1)
-
-        self.clickDownloadButton()
-        time.sleep(1)
-        # Debug
-
-        self.waitForSuccessfullProcessing()
-
-        self.waitForSuccessfullDownloading()
-
-        # input("waiting to close")
         self.driver.close()
+
+        return self.N
+
+
+    def __call__(self):
+        pass
 
 
 if __name__ == "__main__":
-    nexis = NexisWebScrapper()
-    nexis()
+    nexis_getN = NexisWebScrapper()
+    N = nexis_getN.getN()
+
+    BATCH_SIZE = 250
+    # TODO Look into Multi threading?
+    for valueToStart in range(1, N+1, BATCH_SIZE): # move in increments of batch size
+        infox("Running Batch", (valueToStart//BATCH_SIZE) + 1, "/", (N//BATCH_SIZE)+1)
+        nexis = NexisWebScrapper(valueToStart, N, BATCH_SIZE)
+        nexis.runEntireSingleBatch(valueToStart)
