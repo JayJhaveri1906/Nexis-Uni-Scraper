@@ -13,8 +13,14 @@ Provided you have access to nexis uni (advanced.lexis.com) website, you can use 
 - monitors for any active downloading that might be on by checking if chrome download temp files are present at the download location. (.crdownload)
 
 
+## Overview Architecture
+- Run selenium half way to get the number of total articles,
+- divide it into batch sizes,
+- run the single batch process on each (Could be optimized in future by introducing multithreading)
+- Each run creates and stores a docx of the batch size
+- Found a great R library which helps convert the docx into csv files so used that.
+
 ## TODO:
-- Use the downloaded word files in the R library to convert it into csv files
 - Python script to merge the csv files
 - Ready!
 
