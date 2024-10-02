@@ -8,6 +8,10 @@ import selenium
 import logging
 import time
 import os
+from pathlib import Path
+
+
+CURR_DIRECTORY = Path(__file__).parent
 
 # Hanlding Logging CONFIGS
 logging.basicConfig(
@@ -27,12 +31,17 @@ def infox(*args):
 
 
 class NexisWebScrapper:
-    def __init__(self):
+    def __init__(self, valueToStart=1, N=0, query_word = "Hate Crime"):
         # maybe add btime, etime to dynamic the query
+
+        # TODO: add beg time, end time, and also make link dynamic
+        os.makedirs(f'{CURR_DIRECTORY}\\Downloads\\{query_word}_{valueToStart}', exist_ok=True)
+        self.downloadLocation = f"{CURR_DIRECTORY}\\Downloads\\{query_word}_{valueToStart}"
+
+        # Setting up chrome
         opts = ChromeOptions()
-        opts.add_argument("--window-size=1920,1080")
-        # TODO: Make this dynamic
-        self.downloadLocation = "D:\\TP_PROGS\\Learning\\UCSD\\UjimaSP_2024\\NLP Dataset\\AutoScrapingNexis\\Downloads"
+        opts.add_argument("--window-size=1920,1080")    # window size
+        
         prefs = {
             "download.default_directory": self.downloadLocation,
             "download.directory_upgrade": True,
@@ -40,10 +49,18 @@ class NexisWebScrapper:
         }
         opts.add_experimental_option("prefs", prefs)
         self.driver = webdriver.Chrome(options=opts) # Initializing chrome selenium driver
+        
         self.link = "https://advance.lexis.com/search/?pdmfid=1519360&crid=a907010f-8daf-4ab7-9725-f03cdd7d63ad&pdsearchterms=((Hate+W%2F2+Crime))+AND+((date+aft(06%2F01%2F2020))+AND+(DATE+BEF(12%2F31%2F2020)))+AND+new+york&pdstartin=hlct%3A1%3A1&pdcaseshlctselectedbyuser=false&pdtypeofsearch=searchboxclick&pdsearchtype=SearchBox&pdoriginatingpage=search&pdqttype=and&pdquerytemplateid=&ecomp=hcdxk&prid=ad6927ea-40c2-4c79-99ed-983e8f86fa13"  # Link with query
-        self.N = 0  # final number of articles
-        self.batchSize = 500  # MAXIMUM Value = 500 (Due to lexis nexis restrictions)
-                            # Minimum Value = 2, (Due to how i coded i lol)
+        
+        self.N = N  # final number of articles
+        self.valueToStart = valueToStart    # Starting point for range
+        self.batchSize = 10    # MAXIMUM Value = 500 (Due to lexis nexis restrictions)
+                                # Minimum Value = 2, (Due to how i coded i lol)
+                                # Recommended = 250, sometimes at 500, lexis uni decides to email you
+                                # the results, but you are not even logged in, so that is just
+                                # lost lmao.
+
+        
         infox("Initialized")
 
 
@@ -110,11 +127,11 @@ class NexisWebScrapper:
         infox("Clicked download button")
 
 
-    def changeInputValue(self, value=1):
+    def changeInputValue(self, valueToStart=1):
         inputText = self.helper_find_element("//input[@id='SelectedRange' and @placeholder]")
         inputText.clear()
-        inputText.send_keys(str(value) + "-" + str(value+self.batchSize-1))
-        infox("Changed input value to", str(value) + "-" + str(value+self.batchSize-1))
+        inputText.send_keys(str(valueToStart) + "-" + str(valueToStart+self.batchSize-1))
+        infox("Changed input value to", str(valueToStart) + "-" + str(valueToStart+self.batchSize-1))
 
     
     def selectWordFormat(self):
@@ -155,6 +172,40 @@ class NexisWebScrapper:
         infox("Download Finished!, Closing")
         time.sleep(10)
 
+
+    def runEntireSingleBatch(self, valueToStart = 1):
+        self.login()
+        self.driver.get(self.link)
+
+        self.toggleHighSimilarity()
+        time.sleep(1)
+
+        self.clickDownloadIcon()
+        time.sleep(1)
+
+        # TODO Implement logic to partition self.N into batch sizes (use loop or multithreading?)
+        # Problem: we need self.n after selecting high simi to know how to partition
+        # It won't allow us to download repeatedly, we need new incognito session each time
+        # So maybe need a parent script that finds self.n, then run child scripts to open
+        # the new url directly and download in given batch range
+        self.changeInputValue(valueToStart)
+        time.sleep(1)
+        
+        self.selectWordFormat()
+        time.sleep(1)
+
+        self.clickDownloadButton()
+        time.sleep(1)
+        # Debug
+
+        self.waitForSuccessfullProcessing()
+
+        self.waitForSuccessfullDownloading()
+
+        # input("waiting to close")
+        self.driver.close()
+
+
     def __call__(self):
         self.login()
         self.driver.get(self.link)
@@ -184,7 +235,7 @@ class NexisWebScrapper:
 
         self.waitForSuccessfullDownloading()
 
-        input("waiting to close")
+        # input("waiting to close")
         self.driver.close()
 
 
