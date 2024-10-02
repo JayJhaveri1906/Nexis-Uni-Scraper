@@ -1,0 +1,81 @@
+DEBUG Similarity Level off
+INFO Toggled to High Similarity!
+DEBUG Similarity Level high
+INFO Updated Number of Articles to 2531
+INFO Clicked download button
+INFO Changed input value to 1501-1750
+INFO Selected MS Word Format
+INFO Clicked download button
+INFO Starting to Wait for Processing to be completed
+INFO Processing is done!
+INFO Starting to Wait for Download to be completed
+INFO Download Finished!, Closing
+INFO Running Batch 8 / 11
+
+DevTools listening on ws://127.0.0.1:55365/devtools/browser/84476831-5575-48d4-a381-ee1761669288
+INFO Initialized
+INFO Login Complete
+DEBUG Similarity Level off
+INFO Toggled to High Similarity!
+DEBUG Similarity Level high
+INFO Updated Number of Articles to 2531
+INFO Clicked download button
+INFO Changed input value to 1751-2000
+INFO Selected MS Word Format
+INFO Clicked download button
+INFO Starting to Wait for Processing to be completed
+INFO Processing is done!
+INFO Starting to Wait for Download to be completed
+INFO Download Finished!, Closing
+INFO Running Batch 9 / 11
+
+DevTools listening on ws://127.0.0.1:55414/devtools/browser/e61b78e3-21ff-41ce-a0c6-8ea9c255c580
+INFO Initialized
+INFO Login Complete
+DEBUG Similarity Level off
+INFO Toggled to High Similarity!
+DEBUG Similarity Level high
+INFO Updated Number of Articles to 2531
+INFO Clicked download button
+INFO Changed input value to 2001-2250
+INFO Selected MS Word Format
+INFO Clicked download button
+INFO Starting to Wait for Processing to be completed
+INFO Processing is done!
+INFO Starting to Wait for Download to be completed
+INFO Download Finished!, Closing
+INFO Running Batch 10 / 11
+
+DevTools listening on ws://127.0.0.1:55468/devtools/browser/b9f894ba-2439-4a15-bfe0-bf6c9b239504
+INFO Initialized
+INFO Login Complete
+DEBUG Similarity Level off
+INFO Toggled to High Similarity!
+DEBUG Similarity Level high
+INFO Updated Number of Articles to 2531
+INFO Clicked download button
+INFO Changed input value to 2251-2500
+INFO Selected MS Word Format
+INFO Clicked download button
+INFO Starting to Wait for Processing to be completed
+DEBUG Still waiting for the processing to complete...
+INFO Processing is done!
+INFO Starting to Wait for Download to be completed
+INFO Download Finished!, Closing
+INFO Running Batch 11 / 11
+
+DevTools listening on ws://127.0.0.1:55520/devtools/browser/30e8cde2-0637-4886-a8e1-a2ab5d803b7a
+INFO Initialized
+INFO Login Complete
+DEBUG Similarity Level off
+INFO Toggled to High Similarity!
+DEBUG Similarity Level high
+INFO Updated Number of Articles to 2531
+INFO Clicked download button
+INFO Changed input value to 2501-2531
+INFO Selected MS Word Format
+INFO Clicked download button
+INFO Starting to Wait for Processing to be completed
+INFO Processing is done!
+INFO Starting to Wait for Download to be completed
+INFO Download Finished!, Closing

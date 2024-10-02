@@ -31,7 +31,7 @@ def infox(*args):
 
 
 class NexisWebScrapper:
-    def __init__(self, valueToStart=1, N=0, BATCH_SIZE=250, query_word = "Hate Crime"):
+    def __init__(self, link, valueToStart=1, N=0, BATCH_SIZE=250, query_word = "Hate Crime"):
         # maybe add btime, etime to dynamic the query
 
         # TODO: add beg time, end time, and also make link dynamic
@@ -50,7 +50,7 @@ class NexisWebScrapper:
         opts.add_experimental_option("prefs", prefs)
         self.driver = webdriver.Chrome(options=opts) # Initializing chrome selenium driver
         
-        self.link = "https://advance.lexis.com/search/?pdmfid=1519360&crid=a907010f-8daf-4ab7-9725-f03cdd7d63ad&pdsearchterms=((Hate+W%2F2+Crime))+AND+((date+aft(06%2F01%2F2020))+AND+(DATE+BEF(12%2F31%2F2020)))+AND+new+york&pdstartin=hlct%3A1%3A1&pdcaseshlctselectedbyuser=false&pdtypeofsearch=searchboxclick&pdsearchtype=SearchBox&pdoriginatingpage=search&pdqttype=and&pdquerytemplateid=&ecomp=hcdxk&prid=ad6927ea-40c2-4c79-99ed-983e8f86fa13"  # Link with query
+        self.link = link  # Link with query
         
         self.N = N  # final number of articles
         self.valueToStart = valueToStart    # Starting point for range
@@ -229,12 +229,15 @@ class NexisWebScrapper:
 
 
 if __name__ == "__main__":
-    nexis_getN = NexisWebScrapper()
+    link = "https://advance.lexis.com/search/?pdmfid=1519360&crid=a907010f-8daf-4ab7-9725-f03cdd7d63ad&pdsearchterms=((Hate+W%2F2+Crime))+AND+((date+aft(06%2F01%2F2020))+AND+(DATE+BEF(12%2F31%2F2020)))+AND+new+york&pdstartin=hlct%3A1%3A1&pdcaseshlctselectedbyuser=false&pdtypeofsearch=searchboxclick&pdsearchtype=SearchBox&pdoriginatingpage=search&pdqttype=and&pdquerytemplateid=&ecomp=hcdxk&prid=ad6927ea-40c2-4c79-99ed-983e8f86fa13"
+    nexis_getN = NexisWebScrapper(link)
     N = nexis_getN.getN()
 
     BATCH_SIZE = 250
     # TODO Look into Multi threading?
     for valueToStart in range(1, N+1, BATCH_SIZE): # move in increments of batch size
         infox("Running Batch", (valueToStart//BATCH_SIZE) + 1, "/", (N//BATCH_SIZE)+1)
-        nexis = NexisWebScrapper(valueToStart, N, BATCH_SIZE)
+        nexis = NexisWebScrapper(link, valueToStart, N, BATCH_SIZE)
         nexis.runEntireSingleBatch(valueToStart)
+    
+    infox("Finished Running!")
