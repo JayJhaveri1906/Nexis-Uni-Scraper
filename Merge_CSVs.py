@@ -10,7 +10,7 @@ def create_uid(suffix):
 
 # Set the folder paths and the list of queries
 downloads_folder = os.path.expanduser('./Downloads')
-queries = ['Hate Crime'] # 'Bias Crime', 'BI']  # Example query list
+queries = ['Hate Crime', 'Bias Crime', 'Bias Incident']  # Example query list
 output_folder = os.path.join(downloads_folder, "Merged_Files")
 final_merged_file = os.path.join(output_folder, '_'.join(queries) + '_merged.csv')
 

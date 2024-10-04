@@ -229,15 +229,29 @@ class NexisWebScrapper:
 
 
 if __name__ == "__main__":
-    link = "https://advance.lexis.com/search/?pdmfid=1519360&crid=a907010f-8daf-4ab7-9725-f03cdd7d63ad&pdsearchterms=((Hate+W%2F2+Crime))+AND+((date+aft(06%2F01%2F2020))+AND+(DATE+BEF(12%2F31%2F2020)))+AND+new+york&pdstartin=hlct%3A1%3A1&pdcaseshlctselectedbyuser=false&pdtypeofsearch=searchboxclick&pdsearchtype=SearchBox&pdoriginatingpage=search&pdqttype=and&pdquerytemplateid=&ecomp=hcdxk&prid=ad6927ea-40c2-4c79-99ed-983e8f86fa13"
-    nexis_getN = NexisWebScrapper(link)
-    N = nexis_getN.getN()
+    # Bias Incident
+    link = "https://advance.lexis.com/search/?pdmfid=1519360&crid=60cced62-c39e-4fa7-8f2f-354247e173bc&pdsearchterms=((Bias+W%2F2+Incident))+AND+((date+aft(06%2F01%2F2020))+AND+(DATE+BEF(12%2F31%2F2020)))+AND+new+york&pdstartin=hlct%3A1%3A1&pdcaseshlctselectedbyuser=false&pdtypeofsearch=searchboxclick&pdsearchtype=SearchBox&pdoriginatingpage=search&pdqttype=and&pdquerytemplateid=&ecomp=hcdxk&prid=a29c632f-84e1-45e7-8175-c3c6f03ae529"
+    query = "Bias Incident"
 
+    # Bias Crime
+    # link = "https://advance.lexis.com/search/?pdmfid=1519360&crid=a29c632f-84e1-45e7-8175-c3c6f03ae529&pdsearchterms=((Bias+W%2F2+Crime))+AND+((date+aft(06%2F01%2F2020))+AND+(DATE+BEF(12%2F31%2F2020)))+AND+new+york&pdstartin=hlct%3A1%3A1&pdcaseshlctselectedbyuser=false&pdtypeofsearch=searchboxclick&pdsearchtype=SearchBox&pdoriginatingpage=search&pdqttype=and&pdquerytemplateid=&ecomp=hcdxk&prid=a907010f-8daf-4ab7-9725-f03cdd7d63ad"
+    # query = "Bias Crime"
+    
+    # Hate Crime
+    # link = "https://advance.lexis.com/search/?pdmfid=1519360&crid=a907010f-8daf-4ab7-9725-f03cdd7d63ad&pdsearchterms=((Hate+W%2F2+Crime))+AND+((date+aft(06%2F01%2F2020))+AND+(DATE+BEF(12%2F31%2F2020)))+AND+new+york&pdstartin=hlct%3A1%3A1&pdcaseshlctselectedbyuser=false&pdtypeofsearch=searchboxclick&pdsearchtype=SearchBox&pdoriginatingpage=search&pdqttype=and&pdquerytemplateid=&ecomp=hcdxk&prid=ad6927ea-40c2-4c79-99ed-983e8f86fa13"
+    # query = "Hate Crime"
+
+    nexis_getN = NexisWebScrapper(link, query_word=query)
+    infox("Running once to get Total number of articles")
+    N = nexis_getN.getN()
+    infox("Received N:", N)
+
+    infox("Starting automated downloading Process")
     BATCH_SIZE = 250
     # TODO Look into Multi threading?
     for valueToStart in range(1, N+1, BATCH_SIZE): # move in increments of batch size
         infox("Running Batch", (valueToStart//BATCH_SIZE) + 1, "/", (N//BATCH_SIZE)+1)
-        nexis = NexisWebScrapper(link, valueToStart, N, BATCH_SIZE)
+        nexis = NexisWebScrapper(link, valueToStart, N, BATCH_SIZE, query)
         nexis.runEntireSingleBatch(valueToStart)
     
     infox("Finished Running!")
